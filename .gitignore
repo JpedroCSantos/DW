@@ -35,6 +35,9 @@ MANIFEST
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
+docs/Estruturando um DW pagando barato.md
+docs/Data Engineer Road Map.md
+docs/board_diary.md
 
 # Installer logs
 pip-log.txt
