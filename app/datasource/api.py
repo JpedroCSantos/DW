@@ -1,4 +1,7 @@
 import requests
+import pandas as pd
+import json
+from io import BytesIO
 from typing import List
 from contracts.schema import GenericSchema
 
@@ -10,17 +13,18 @@ class APICollector:
         return
     
     def start(self, param):
-        reponse = self.getData(param)
+        response = self.getData(param)
+        response = self.extractData(response)
+
+        return self.transformDf(response)
         
-        return self.extractData(reponse)
-    
     def getData(self, param):
         response = None
 
         if param > 1:
             response = requests.get(f'http://127.0.0.1:8000/shoppings_generate/{param}').json()
         else:
-            response = requests.get(f'http://127.0.0.1:8000/shopping_generate').json()
+            response = [requests.get(f'http://127.0.0.1:8000/shopping_generate').json()]
 
         return response
     
@@ -38,5 +42,18 @@ class APICollector:
 
         return shoppingItems
     
-    def transformDf():
-        return
+    def transformDf(self, response):
+        df = pd.DataFrame(response)
+        return df
+    
+    def convertToParquet(self, df):
+        '''
+        BytesIO = >Evita a escrita e leitura de arquivos no disco (HD/SSD), 
+        tratando todo o processo em memória.
+        '''
+        self._buffer = BytesIO()
+        try:
+            df.to_parquet(self._buffer, index=False)
+            return self._buffer
+        except:
+            print("Erro ao transformar o DF em parquet")
