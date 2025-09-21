@@ -35,6 +35,44 @@ flowchart LR
     class BRZ,SILVER,GOLD stor;
 ```
 
+### Bibliotecas principais
+- FastAPI, Uvicorn
+- Faker
+- Pandas, PyArrow
+- Requests
+
+### Requisitos
+- Python 3.13+
+- Poetry 2+
+
+### Setup (Poetry)
+```bash
+# instalar dependências
+poetry install
+
+# ativar shell virtual
+poetry shell
+```
+
+### Executar API (FastAPI)
+```bash
+# na raiz do projeto
+uvicorn app.api.routes:app --reload
+# API disponível em http://127.0.0.1:8000
+# Docs interativas: http://127.0.0.1:8000/docs
+```
+
+Rotas atuais:
+- GET `/shopping_generate`
+- GET `/shoppings_generate/{number_of_register}`
+
+### Executar coletor (consumer local que chama a API e salva Parquet)
+```bash
+# com a API rodando em 127.0.0.1:8000
+python -m app.main
+# gera arquivo Parquet em data/output/<settings.filename>.parquet
+```
+
 ### Trade-offs
 - Simplicidade e custo ≫ alta escala: DuckDB+Parquet elimina infra e é rápido em 1–50 GB locais; perde em concorrência multiusuário e workloads >100s GB
 - Catálogo leve ≫ metastore: menor acoplamento, porém menos governança; futuro: Glue/Unity/DBT docs
